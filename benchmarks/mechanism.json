@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "python": "3.13.14",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "rounds": 9,
+    "iterations": 2000000,
+    "note": "Synthetic microbenchmark. Both loops perform N comparisons in total; only the iteration count differs. The ratio is the median of per-round ratios."
+  },
+  "cases": {
+    "2M iterations x 1 comparison": {
+      "median_ms": 42.98370000014984,
+      "best_ms": 41.29400000056194
+    },
+    "1M iterations x 2 comparisons": {
+      "median_ms": 34.085700000105135,
+      "best_ms": 31.721199999992677
+    },
+    "ratio_one_cmp_over_two_cmp": {
+      "median": 1.2802744026487278,
+      "min": 1.0803920065212655,
+      "max": 1.3295680663473513
+    }
+  }
+}

@@ -1,0 +1,77 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # BIDSEL_FAST=1 shrinks the exhaustive sweep from 1093 to 364 cases.
+      # Everything else still runs.
+      - name: Run tests (fast profile)
+        env:
+          BIDSEL_FAST: "1"
+        run: python -m unittest discover -s tests -t . -v
+
+      # Windows defaults to cp1252 and these scripts print non-ASCII.
+      - name: Operation counts
+        run: python benchmarks/ops.py
+
+      - name: Mechanism microbenchmark
+        run: python benchmarks/mechanism.py
+
+      - name: Smoke-run the timing benchmark
+        run: python benchmarks/run_all.py --ci
+
+      # Guard against a smoke run clobbering the real measurement tables.
+      - name: Verify smoke run did not touch the real results
+        shell: bash
+        run: |
+          fail=0
+          for f in benchmarks/results.json benchmarks/ops.json benchmarks/mechanism.json; do
+            if git diff --quiet -- "$f"; then
+              echo "OK: $f untouched"
+            else
+              echo "::error::--ci modified $f"
+              fail=1
+            fi
+          done
+          exit $fail
+
+  figures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install matplotlib
+        run: pip install "matplotlib>=3.7"
+
+      # Figures are committed, so this checks the generator still runs and the
+      # data files it reads are intact — not that the pixels are byte-identical.
+      - name: Regenerate figures
+        run: python assets/make_figures.py
+
+      - name: Confirm all four figures exist
+        shell: bash
+        run: |
+          for f in speedup-by-shape comparisons-vs-reads mechanism precheck-cost; do
+            test -s "assets/$f.png" || { echo "::error::missing assets/$f.png"; exit 1; }
+            echo "OK: assets/$f.png"
+          done

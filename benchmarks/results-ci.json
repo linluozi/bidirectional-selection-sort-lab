@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "profile": "ci",
+    "python": "3.13.14",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "rounds": 3,
+    "sizes": [
+      400
+    ],
+    "kinds": [
+      "random",
+      "sorted"
+    ],
+    "arms": [
+      "baseline",
+      "bidirectional",
+      "fast_noprecheck",
+      "fast"
+    ],
+    "note": "Ratios are medians of per-round baseline/arm ratios with same-round interleaving. Absolute ms are best-of-N and are for magnitude only."
+  },
+  "cells": [
+    {
+      "size": 400,
+      "kind": "random",
+      "rounds": 3,
+      "median_ms": {
+        "baseline": 1.9461000001683715,
+        "bidirectional": 1.4836999998806277,
+        "fast_noprecheck": 1.2501999999585678,
+        "fast": 1.2931000001117354
+      },
+      "best_ms": {
+        "baseline": 1.850600000580016,
+        "bidirectional": 1.4777000005778973,
+        "fast_noprecheck": 1.240200000211189,
+        "fast": 1.2359000002106768
+      },
+      "ratio": {
+        "bidirectional": {
+          "median": 1.3169790887238904,
+          "min": 1.2330756933249822,
+          "max": 1.3304576402637263
+        },
+        "fast_noprecheck": {
+          "median": 1.5566309392360151,
+          "min": 1.3959417669964516,
+          "max": 1.5916787617838462
+        },
+        "fast": {
+          "median": 1.5265640712473125,
+          "min": 1.3217627316899752,
+          "max": 1.5746419611915454
+        }
+      }
+    },
+    {
+      "size": 400,
+      "kind": "sorted",
+      "rounds": 3,
+      "median_ms": {
+        "baseline": 1.7942000004040892,
+        "bidirectional": 1.6124000003401306,
+        "fast_noprecheck": 1.4297999996415456,
+        "fast": 0.023399999918183312
+      },
+      "best_ms": {
+        "baseline": 1.770300000316638,
+        "bidirectional": 1.5916000002107467,
+        "fast_noprecheck": 1.4277000000220141,
+        "fast": 0.023300000066228677
+      },
+      "ratio": {
+        "bidirectional": {
+          "median": 1.1122769540602095,
+          "min": 1.0456929714099439,
+          "max": 1.291925080454054
+        },
+        "fast_noprecheck": {
+          "median": 1.2567065912841802,
+          "min": 1.1862896203558486,
+          "max": 1.4569170518154837
+        },
+        "fast": {
+          "median": 76.6752139605727,
+          "min": 71.09638433857455,
+          "max": 89.40343322929053
+        }
+      }
+    }
+  ]
+}

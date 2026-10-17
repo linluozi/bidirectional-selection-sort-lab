@@ -1,0 +1,529 @@
+{
+  "meta": {
+    "python": "3.13.14",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "note": "Exact counts, no timing. 'read' is the number of __getitem__ calls on the list (one per element inspected plus O(n) from swaps)."
+  },
+  "cells": [
+    {
+      "kind": "random",
+      "size": 100,
+      "arms": {
+        "baseline": {
+          "comparisons": 4950,
+          "subscripts": 10096,
+          "swaps": 98
+        },
+        "bidirectional": {
+          "comparisons": 4838,
+          "subscripts": 9872,
+          "swaps": 98
+        },
+        "fast_noprecheck": {
+          "comparisons": 4838,
+          "subscripts": 2746,
+          "swaps": 98
+        },
+        "fast": {
+          "comparisons": 4839,
+          "subscripts": 2748,
+          "swaps": 98
+        }
+      }
+    },
+    {
+      "kind": "random",
+      "size": 500,
+      "arms": {
+        "baseline": {
+          "comparisons": 124750,
+          "subscripts": 250490,
+          "swaps": 495
+        },
+        "bidirectional": {
+          "comparisons": 123809,
+          "subscripts": 248608,
+          "swaps": 495
+        },
+        "fast_noprecheck": {
+          "comparisons": 123809,
+          "subscripts": 63740,
+          "swaps": 495
+        },
+        "fast": {
+          "comparisons": 123810,
+          "subscripts": 63742,
+          "swaps": 495
+        }
+      }
+    },
+    {
+      "kind": "random",
+      "size": 1000,
+      "arms": {
+        "baseline": {
+          "comparisons": 499500,
+          "subscripts": 1000984,
+          "swaps": 992
+        },
+        "bidirectional": {
+          "comparisons": 497185,
+          "subscripts": 996354,
+          "swaps": 992
+        },
+        "fast_noprecheck": {
+          "comparisons": 497185,
+          "subscripts": 252484,
+          "swaps": 992
+        },
+        "fast": {
+          "comparisons": 497186,
+          "subscripts": 252486,
+          "swaps": 992
+        }
+      }
+    },
+    {
+      "kind": "random",
+      "size": 2000,
+      "arms": {
+        "baseline": {
+          "comparisons": 1999000,
+          "subscripts": 4001982,
+          "swaps": 1991
+        },
+        "bidirectional": {
+          "comparisons": 1993963,
+          "subscripts": 3991908,
+          "swaps": 1991
+        },
+        "fast_noprecheck": {
+          "comparisons": 1993963,
+          "subscripts": 1004982,
+          "swaps": 1991
+        },
+        "fast": {
+          "comparisons": 1993964,
+          "subscripts": 1004984,
+          "swaps": 1991
+        }
+      }
+    },
+    {
+      "kind": "nearly",
+      "size": 100,
+      "arms": {
+        "baseline": {
+          "comparisons": 4950,
+          "subscripts": 9904,
+          "swaps": 2
+        },
+        "bidirectional": {
+          "comparisons": 4996,
+          "subscripts": 9996,
+          "swaps": 2
+        },
+        "fast_noprecheck": {
+          "comparisons": 4996,
+          "subscripts": 2554,
+          "swaps": 2
+        },
+        "fast": {
+          "comparisons": 5000,
+          "subscripts": 2562,
+          "swaps": 2
+        }
+      }
+    },
+    {
+      "kind": "nearly",
+      "size": 500,
+      "arms": {
+        "baseline": {
+          "comparisons": 124750,
+          "subscripts": 249520,
+          "swaps": 10
+        },
+        "bidirectional": {
+          "comparisons": 124992,
+          "subscripts": 250004,
+          "swaps": 10
+        },
+        "fast_noprecheck": {
+          "comparisons": 124992,
+          "subscripts": 62770,
+          "swaps": 10
+        },
+        "fast": {
+          "comparisons": 125008,
+          "subscripts": 62802,
+          "swaps": 10
+        }
+      }
+    },
+    {
+      "kind": "nearly",
+      "size": 1000,
+      "arms": {
+        "baseline": {
+          "comparisons": 499500,
+          "subscripts": 999040,
+          "swaps": 20
+        },
+        "bidirectional": {
+          "comparisons": 499978,
+          "subscripts": 999996,
+          "swaps": 20
+        },
+        "fast_noprecheck": {
+          "comparisons": 499978,
+          "subscripts": 250540,
+          "swaps": 20
+        },
+        "fast": {
+          "comparisons": 500010,
+          "subscripts": 250604,
+          "swaps": 20
+        }
+      }
+    },
+    {
+      "kind": "nearly",
+      "size": 2000,
+      "arms": {
+        "baseline": {
+          "comparisons": 1999000,
+          "subscripts": 3998080,
+          "swaps": 40
+        },
+        "bidirectional": {
+          "comparisons": 1999952,
+          "subscripts": 3999984,
+          "swaps": 40
+        },
+        "fast_noprecheck": {
+          "comparisons": 1999952,
+          "subscripts": 1001080,
+          "swaps": 40
+        },
+        "fast": {
+          "comparisons": 1999961,
+          "subscripts": 1001098,
+          "swaps": 40
+        }
+      }
+    },
+    {
+      "kind": "sorted",
+      "size": 100,
+      "arms": {
+        "baseline": {
+          "comparisons": 4950,
+          "subscripts": 9900,
+          "swaps": 0
+        },
+        "bidirectional": {
+          "comparisons": 5000,
+          "subscripts": 10000,
+          "swaps": 0
+        },
+        "fast_noprecheck": {
+          "comparisons": 5000,
+          "subscripts": 2550,
+          "swaps": 0
+        },
+        "fast": {
+          "comparisons": 99,
+          "subscripts": 198,
+          "swaps": 0
+        }
+      }
+    },
+    {
+      "kind": "sorted",
+      "size": 500,
+      "arms": {
+        "baseline": {
+          "comparisons": 124750,
+          "subscripts": 249500,
+          "swaps": 0
+        },
+        "bidirectional": {
+          "comparisons": 125000,
+          "subscripts": 250000,
+          "swaps": 0
+        },
+        "fast_noprecheck": {
+          "comparisons": 125000,
+          "subscripts": 62750,
+          "swaps": 0
+        },
+        "fast": {
+          "comparisons": 499,
+          "subscripts": 998,
+          "swaps": 0
+        }
+      }
+    },
+    {
+      "kind": "sorted",
+      "size": 1000,
+      "arms": {
+        "baseline": {
+          "comparisons": 499500,
+          "subscripts": 999000,
+          "swaps": 0
+        },
+        "bidirectional": {
+          "comparisons": 500000,
+          "subscripts": 1000000,
+          "swaps": 0
+        },
+        "fast_noprecheck": {
+          "comparisons": 500000,
+          "subscripts": 250500,
+          "swaps": 0
+        },
+        "fast": {
+          "comparisons": 999,
+          "subscripts": 1998,
+          "swaps": 0
+        }
+      }
+    },
+    {
+      "kind": "sorted",
+      "size": 2000,
+      "arms": {
+        "baseline": {
+          "comparisons": 1999000,
+          "subscripts": 3998000,
+          "swaps": 0
+        },
+        "bidirectional": {
+          "comparisons": 2000000,
+          "subscripts": 4000000,
+          "swaps": 0
+        },
+        "fast_noprecheck": {
+          "comparisons": 2000000,
+          "subscripts": 1001000,
+          "swaps": 0
+        },
+        "fast": {
+          "comparisons": 1999,
+          "subscripts": 3998,
+          "swaps": 0
+        }
+      }
+    },
+    {
+      "kind": "equal",
+      "size": 100,
+      "arms": {
+        "baseline": {
+          "comparisons": 4950,
+          "subscripts": 9900,
+          "swaps": 0
+        },
+        "bidirectional": {
+          "comparisons": 5000,
+          "subscripts": 10000,
+          "swaps": 0
+        },
+        "fast_noprecheck": {
+          "comparisons": 5000,
+          "subscripts": 2550,
+          "swaps": 0
+        },
+        "fast": {
+          "comparisons": 99,
+          "subscripts": 198,
+          "swaps": 0
+        }
+      }
+    },
+    {
+      "kind": "equal",
+      "size": 500,
+      "arms": {
+        "baseline": {
+          "comparisons": 124750,
+          "subscripts": 249500,
+          "swaps": 0
+        },
+        "bidirectional": {
+          "comparisons": 125000,
+          "subscripts": 250000,
+          "swaps": 0
+        },
+        "fast_noprecheck": {
+          "comparisons": 125000,
+          "subscripts": 62750,
+          "swaps": 0
+        },
+        "fast": {
+          "comparisons": 499,
+          "subscripts": 998,
+          "swaps": 0
+        }
+      }
+    },
+    {
+      "kind": "equal",
+      "size": 1000,
+      "arms": {
+        "baseline": {
+          "comparisons": 499500,
+          "subscripts": 999000,
+          "swaps": 0
+        },
+        "bidirectional": {
+          "comparisons": 500000,
+          "subscripts": 1000000,
+          "swaps": 0
+        },
+        "fast_noprecheck": {
+          "comparisons": 500000,
+          "subscripts": 250500,
+          "swaps": 0
+        },
+        "fast": {
+          "comparisons": 999,
+          "subscripts": 1998,
+          "swaps": 0
+        }
+      }
+    },
+    {
+      "kind": "equal",
+      "size": 2000,
+      "arms": {
+        "baseline": {
+          "comparisons": 1999000,
+          "subscripts": 3998000,
+          "swaps": 0
+        },
+        "bidirectional": {
+          "comparisons": 2000000,
+          "subscripts": 4000000,
+          "swaps": 0
+        },
+        "fast_noprecheck": {
+          "comparisons": 2000000,
+          "subscripts": 1001000,
+          "swaps": 0
+        },
+        "fast": {
+          "comparisons": 1999,
+          "subscripts": 3998,
+          "swaps": 0
+        }
+      }
+    },
+    {
+      "kind": "reversed",
+      "size": 100,
+      "arms": {
+        "baseline": {
+          "comparisons": 4950,
+          "subscripts": 10000,
+          "swaps": 50
+        },
+        "bidirectional": {
+          "comparisons": 2500,
+          "subscripts": 5100,
+          "swaps": 50
+        },
+        "fast_noprecheck": {
+          "comparisons": 2500,
+          "subscripts": 2650,
+          "swaps": 50
+        },
+        "fast": {
+          "comparisons": 2501,
+          "subscripts": 2652,
+          "swaps": 50
+        }
+      }
+    },
+    {
+      "kind": "reversed",
+      "size": 500,
+      "arms": {
+        "baseline": {
+          "comparisons": 124750,
+          "subscripts": 250000,
+          "swaps": 250
+        },
+        "bidirectional": {
+          "comparisons": 62500,
+          "subscripts": 125500,
+          "swaps": 250
+        },
+        "fast_noprecheck": {
+          "comparisons": 62500,
+          "subscripts": 63250,
+          "swaps": 250
+        },
+        "fast": {
+          "comparisons": 62501,
+          "subscripts": 63252,
+          "swaps": 250
+        }
+      }
+    },
+    {
+      "kind": "reversed",
+      "size": 1000,
+      "arms": {
+        "baseline": {
+          "comparisons": 499500,
+          "subscripts": 1000000,
+          "swaps": 500
+        },
+        "bidirectional": {
+          "comparisons": 250000,
+          "subscripts": 501000,
+          "swaps": 500
+        },
+        "fast_noprecheck": {
+          "comparisons": 250000,
+          "subscripts": 251500,
+          "swaps": 500
+        },
+        "fast": {
+          "comparisons": 250001,
+          "subscripts": 251502,
+          "swaps": 500
+        }
+      }
+    },
+    {
+      "kind": "reversed",
+      "size": 2000,
+      "arms": {
+        "baseline": {
+          "comparisons": 1999000,
+          "subscripts": 4000000,
+          "swaps": 1000
+        },
+        "bidirectional": {
+          "comparisons": 1000000,
+          "subscripts": 2002000,
+          "swaps": 1000
+        },
+        "fast_noprecheck": {
+          "comparisons": 1000000,
+          "subscripts": 1003000,
+          "swaps": 1000
+        },
+        "fast": {
+          "comparisons": 1000001,
+          "subscripts": 1003002,
+          "swaps": 1000
+        }
+      }
+    }
+  ]
+}
