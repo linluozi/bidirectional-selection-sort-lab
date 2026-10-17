@@ -119,11 +119,17 @@ docs/CLAIMS.md            每一个数字，以及它是怎么来的
 
 ```bash
 python -m unittest discover -s tests -t . -v    # BIDSEL_FAST=1 缩短穷举
-python benchmarks/ops.py
-python benchmarks/mechanism.py
+python benchmarks/ops.py                        # 写 ops.json
+python benchmarks/ops.py --check                # 校验已提交的计数，不写盘
+python benchmarks/mechanism.py                  # 写 mechanism.json
+python benchmarks/mechanism.py --no-write       # 只跑不写，保持工作树干净
 python benchmarks/run_all.py
 python assets/make_figures.py                   # 需要 matplotlib
 ```
+
+`ops.py --check` 是关键的那个：计数是确定的，所以在另一台机器上重算并与已提交的表比对，
+就是一个真正的回归测试。计时不是确定的——这就是 `mechanism.py --no-write` 存在的原因，
+也是 CI 从不拿新跑的 `results.json` 做 diff 的原因。
 
 ## 致谢与许可
 

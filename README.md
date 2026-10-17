@@ -149,11 +149,19 @@ docs/CLAIMS.md            every number, and how it was obtained
 
 ```bash
 python -m unittest discover -s tests -t . -v    # BIDSEL_FAST=1 for a shorter sweep
-python benchmarks/ops.py
-python benchmarks/mechanism.py
+python benchmarks/ops.py                        # writes ops.json
+python benchmarks/ops.py --check                # verify committed counts, no write
+python benchmarks/mechanism.py                  # writes mechanism.json
+python benchmarks/mechanism.py --no-write       # run without dirtying the tree
 python benchmarks/run_all.py
 python assets/make_figures.py                   # needs matplotlib
 ```
+
+`ops.py --check` is the interesting one: the counts are deterministic, so
+recomputing them on a different machine and comparing against the committed
+table is a real regression test. Timings are not, which is why
+`mechanism.py --no-write` exists and why CI never diffs `results.json` against a
+fresh run.
 
 ## Credit and licence
 

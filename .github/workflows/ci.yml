@@ -28,29 +28,32 @@ jobs:
         run: python -m unittest discover -s tests -t . -v
 
       # Windows defaults to cp1252 and these scripts print non-ASCII.
-      - name: Operation counts
-        run: python benchmarks/ops.py
+      # --check recomputes every cell and compares against the committed
+      # ops.json. Counts are deterministic across machines, so a mismatch is
+      # a real behavioural change, not noise.
+      - name: Verify operation counts against the committed table
+        run: python benchmarks/ops.py --check
 
-      - name: Mechanism microbenchmark
-        run: python benchmarks/mechanism.py
+      # Timings are machine-specific; run it, but do not dirty the tree.
+      - name: Mechanism microbenchmark (no write)
+        run: python benchmarks/mechanism.py --no-write
 
       - name: Smoke-run the timing benchmark
         run: python benchmarks/run_all.py --ci
 
-      # Guard against a smoke run clobbering the real measurement tables.
-      - name: Verify smoke run did not touch the real results
+      # The --ci profile must write results-ci.json and leave results.json
+      # alone: results.json is the committed measurement table, and a smoke
+      # run must never clobber it.
+      - name: Verify the smoke run did not touch results.json
         shell: bash
         run: |
-          fail=0
-          for f in benchmarks/results.json benchmarks/ops.json benchmarks/mechanism.json; do
-            if git diff --quiet -- "$f"; then
-              echo "OK: $f untouched"
-            else
-              echo "::error::--ci modified $f"
-              fail=1
-            fi
-          done
-          exit $fail
+          if git diff --quiet -- benchmarks/results.json; then
+            echo "OK: benchmarks/results.json untouched"
+          else
+            echo "::error::--ci modified benchmarks/results.json"
+            git diff --stat -- benchmarks/results.json
+            exit 1
+          fi
 
   figures:
     runs-on: ubuntu-latest

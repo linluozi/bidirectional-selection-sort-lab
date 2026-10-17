@@ -61,12 +61,26 @@ def make_data(size: int, kind: str, seed: int = 20261017) -> list[int]:
     raise ValueError(kind)
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
     for stream in (sys.stdout, sys.stderr):
         try:
             stream.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[union-attr]
         except (AttributeError, ValueError):
             pass
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help=(
+            "recompute and compare against the committed ops.json instead of "
+            "writing. Counts are deterministic across machines, so any "
+            "difference is a real regression, not a timing artefact."
+        ),
+    )
+    args = parser.parse_args(argv)
 
     cells: list[dict[str, Any]] = []
     print(f"{'kind':>9} {'n':>6} | {'arm':>16} | {'cmp':>10} {'read':>10} {'swap':>7}")
@@ -98,6 +112,29 @@ def main() -> int:
         "cells": cells,
     }
     target = ROOT / "benchmarks" / "ops.json"
+
+    if args.check:
+        if not target.exists():
+            print(f"::error:: {target.name} is missing")
+            return 1
+        committed = json.loads(target.read_text(encoding="utf-8"))
+        diffs = []
+        for got, want in zip(cells, committed.get("cells", [])):
+            for arm, counts in got["arms"].items():
+                ref = want.get("arms", {}).get(arm)
+                if ref != counts:
+                    diffs.append(
+                        f"{got['kind']} n={got['size']} {arm}: "
+                        f"committed {ref} != recomputed {counts}"
+                    )
+        if diffs:
+            for line in diffs[:10]:
+                print(f"::error:: {line}")
+            print(f"{len(diffs)} mismatched cells")
+            return 1
+        print(f"OK: {len(cells)} cells match {target.name} exactly")
+        return 0
+
     # newline="\n" keeps the file LF on Windows, so CI's "did the smoke run
     # touch results.json" check compares like with like.
     target.write_text(

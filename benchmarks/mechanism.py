@@ -63,12 +63,26 @@ CASES: tuple[tuple[str, Callable[[list[int], int], int], int], ...] = (
 )
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
     for stream in (sys.stdout, sys.stderr):
         try:
             stream.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[union-attr]
         except (AttributeError, ValueError):
             pass
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--no-write",
+        action="store_true",
+        help=(
+            "run and print, but do not overwrite mechanism.json. CI uses this: "
+            "the committed timings are machine-specific, so a runner with a "
+            "different CPU would otherwise dirty the tree on every build."
+        ),
+    )
+    args = parser.parse_args(argv)
 
     data = list(range(N_ITERS))
     results: dict[str, Any] = {}
@@ -120,6 +134,11 @@ def main() -> int:
         "cases": results,
     }
     target = ROOT / "benchmarks" / "mechanism.json"
+
+    if args.no_write:
+        print("\n--no-write: mechanism.json left untouched")
+        return 0
+
     # newline="\n" keeps the file LF on Windows, so CI's "did the smoke run
     # touch results.json" check compares like with like.
     target.write_text(
